@@ -48,10 +48,10 @@ function chooseN(msg){
 
 bot.on('callback_query', function onCallbackQuery(callbackQuery) {
   const action = callbackQuery.data;
-  const msg = callbackQuery.message;
+  console.warn(callbackQuery);
   var opts = {
-    chat_id: msg.chat.id,
-    message_id: msg.message_id,
+    chat_id: callbackQuery.chat_instance,
+    message_id: callbackQuery.inline_message_id,
   }
   if (action === '6') {
      bot.editMessageReplyMarkup(
@@ -72,11 +72,35 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
   }
 });
 
+
 bot.on('inline_query', function(msg)
 {
+  const opts = {
+        // reply_to_message_id: msg.message_id,
+        form: {
+          reply_markup: JSON.stringify({
+            inline_keyboard: [
+              [{ text: '6*6', callback_data: '6' },{ text: '8*8', callback_data: '8' }]
+            ]
+          })
+        }    
+    };
+    const form= {
+          reply_markup: JSON.stringify({
+            inline_keyboard: [
+              [{ text: '6*6', callback_data: '6' },{ text: '8*8', callback_data: '8' }]
+            ]
+          })
+        }  ;
+    const rm = {
+            inline_keyboard: [
+              [{ text: '6*6', callback_data: '6' },{ text: '8*8', callback_data: '8' }]
+            ]
+          };
 
     // Received inline query
-    // console.warn(msg);
-    bot.answerInlineQuery(msg.id,[{title: "OthelloGame" , message_text: "@"+msg.from.username , options: opts, type: 'article', id: msg.id}]);
+    console.warn(bot._fixReplyMarkup.toString());
+    bot.answerInlineQuery(msg.id,[{title: "OthelloGame" , message_text: "@"+msg.from.username, type: 'article', id: '0', reply_markup:rm},
+      {title: "OthelloGame" , message_text: "@"+msg.from.username, type: 'article', id: "1", reply_markup:rm}]);
     // console.warn("1");
 });
